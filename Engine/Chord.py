@@ -617,23 +617,47 @@ class Chord:
         return _root, typename, unresolved, nameCost
 
     @staticmethod
-    def Standardize(notes: list[Note]):
+    # 音的出现顺序不变，调整后续音的八度，使其满足递增排列。
+    def Reoctvate(notes: list[Note]):
+        # 不改变音列顺序，整理音列为递增序列（）
         for i in range(1, len(notes)):
             while notes[i] <= notes[i - 1]:
                 notes[i] = notes[i] + Int.Oct
         return notes
 
     @staticmethod
-    def Names(notes: list[Note], force_root=None):
+    def Standardize(notes: list[Note]):
+        notes = Chord.Reoctvate(notes)
+        # 将音列规范化到两个八度内，即，若低八度不低于低音，且不在原始音列中，则改变为低八度。
+        for i, n in enumerate(notes):
+            if i != 0:
+                while notes[i] - notes[0] > Int.DuoOct and notes[i] - Int.Oct not in notes:
+                    notes[i] -= Int.Oct
+        # 进一步规范，潜在的三度音、五度音、大七度音到一个八度内
+        for i, n in enumerate(notes):
+            if i != 0:
+                while notes[i] - notes[0] in [Int.Min10, Int.Maj10, Int.Aug11, Int.Per12, Int.Maj14] and notes[i] - Int.Oct not in notes:
+                    notes[i] -= Int.Oct
+
+        # 按绝对音高升序排列
         notes.sort()
+        # 由高到低去除八度音（以免产生unresolvable的多余音）
+        for i in range(len(notes) - 1, -1, -1):
+            if notes[i] - Int.Oct in notes:
+                notes.remove(notes[i])
+        return notes
+
+    @staticmethod
+    def Names(notes: list[Note], force_root=None):
+        notes = Chord.Standardize(notes)
         if force_root is not None:
             notes.insert(0, force_root)
-            notes = Chord.Standardize(notes)
+            notes = Chord.Reoctvate(notes)
         names = []
         root = notes[0]
         # 原位和转位
         for start, n in enumerate(notes):
-            cycle = Chord.Standardize([notes[(id + start) % len(notes)] for id in range(len(notes))])
+            cycle = Chord.Reoctvate([notes[(id + start) % len(notes)] for id in range(len(notes))])
             rootNote, typename, unresolved, cost = Chord.Name(cycle)
             if len(unresolved) == 0:
                 over = "" if start == 0 else f"/{root.__str__()}"
@@ -642,7 +666,7 @@ class Chord:
         # 和弦外低音斜线和弦
         notes = notes[1:]
         for start, n in enumerate(notes):
-            cycle = Chord.Standardize([notes[(id + start) % len(notes)] for id in range(len(notes))])
+            cycle = Chord.Reoctvate([notes[(id + start) % len(notes)] for id in range(len(notes))])
             rootNote, typename, unresolved, cost = Chord.Name(cycle)
             if len(unresolved) == 0:
                 cost += 1.5 if force_root is None else 0

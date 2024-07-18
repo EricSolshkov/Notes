@@ -43,10 +43,11 @@ progression = [
 
 ]
 for c in progression:
-    c.Debug()
-    print(f"alias: {c.GetNames()[:3]}\n")
+    pass
+    #c.Debug()
+    #print(f"alias: {c.GetNames()[:3]}\n")
 
-print(Chord.Names([Note("D"), Note("G"), Note("B")]))
+print(Chord.Names([Note("F"), Note("C"), Note("F"), Note("A"), Note("C"), Note("E")]))
 
 
 

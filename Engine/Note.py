@@ -35,6 +35,9 @@ class Interval(Enum):
     Maj14 = 23
     DuoOct = 24
 
+    def Normalized(self):
+        return [i for i in Interval.__members__.values() if i.value == self.value % 12][0]
+
     def __add__(self, other):
         if isinstance(other, Interval):
             return [e for e in Interval.__members__.values() if e == (self.value + other.value) % 24][0]
