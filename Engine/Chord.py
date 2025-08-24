@@ -12,6 +12,7 @@ _type: dict[str, list[Int]] = {
     "dim": [Int.Min3, Int.Dim5],
 
     "maj7": [Int.Maj3, Int.Per5, Int.Maj7],
+    "M7": [Int.Maj3, Int.Per5, Int.Maj7],
     "m7": [Int.Min3, Int.Per5, Int.Min7],
     "7": [Int.Maj3, Int.Per5, Int.Min7],
     "mM7": [Int.Min3, Int.Per5, Int.Maj7],
@@ -33,17 +34,17 @@ _type: dict[str, list[Int]] = {
     "aug9": [Int.Maj3, Int.Min6, Int.Min7, Int.Maj9],
     "dim9": [Int.Min3, Int.Dim5, Int.Maj6, Int.Maj9],
 
-    "maj11": [Int.Maj3, Int.Per5, Int.Maj7, Int.Maj9, Int.Per11],
-    "m11": [Int.Min3, Int.Per5, Int.Min7, Int.Maj9, Int.Per11],
-    "11": [Int.Maj3, Int.Per5, Int.Min7, Int.Maj9, Int.Per11],
-    "aug11": [Int.Maj3, Int.Min6, Int.Min7, Int.Maj9, Int.Per11],
-    "dim11": [Int.Min3, Int.Dim5, Int.Maj6, Int.Maj9, Int.Per11],
+    "maj11": [Int.Maj3, Int.Per5, Int.Maj7, Int.Per11],
+    "m11": [Int.Min3, Int.Per5, Int.Min7, Int.Per11],
+    "11": [Int.Maj3, Int.Per5, Int.Min7, Int.Per11],
+    "aug11": [Int.Maj3, Int.Min6, Int.Min7, Int.Per11],
+    "dim11": [Int.Min3, Int.Dim5, Int.Maj6, Int.Per11],
 
-    "maj13": [Int.Maj3, Int.Per5, Int.Maj7, Int.Maj9, Int.Per11, Int.Maj13],
-    "m13": [Int.Min3, Int.Per5, Int.Min7, Int.Maj9, Int.Per11, Int.Maj13],
-    "13": [Int.Maj3, Int.Per5, Int.Min7, Int.Maj9, Int.Per11, Int.Maj13],
-    "aug13": [Int.Maj3, Int.Min6, Int.Min7, Int.Maj9, Int.Per11, Int.Maj13],
-    "dim13": [Int.Min3, Int.Dim5, Int.Maj6, Int.Maj9, Int.Per11, Int.Maj13],
+    "maj13": [Int.Maj3, Int.Per5, Int.Maj7, Int.Maj13],
+    "m13": [Int.Min3, Int.Per5, Int.Min7, Int.Maj13],
+    "13": [Int.Maj3, Int.Per5, Int.Min7, Int.Maj13],
+    "aug13": [Int.Maj3, Int.Min6, Int.Min7, Int.Maj13],
+    "dim13": [Int.Min3, Int.Dim5, Int.Maj6, Int.Maj13],
 }
 # suspend works like modifiers, but should place before extenders.
 _suspend: dict[str, tuple[list[Int], Int]] = {
@@ -182,9 +183,14 @@ class Chord:
             # init like Chord(CM7)
             else:
                 signal = "#"
-                if param[0] in ['b', '#']:
+                if len(param) == 1:
+                    typeIndex = 1
+                elif param[0] in ['b', '#']:
                     typeIndex = 2
                     signal = param[0]
+                elif param[1] in ['b', '#']:
+                    typeIndex = 2
+                    signal = param[1]
                 else:
                     typeIndex = 1
                 self._root = Note(param[:typeIndex], signal)
@@ -248,7 +254,21 @@ class Chord:
             self._root = Note("C")
 
     def Inv(self, ord: int):
-        self._over = self._notes[ord % len(self._notes)]
+        """
+        Returns a new Chord object with the specified inversion.
+        ord: 0 for root position, 1 for first inversion, 2 for second inversion, etc.
+        """
+        if ord < 0 or ord >= len(self._notes):
+            raise ValueError("Inversion order out of range.")
+        new_chord = Chord(self)
+        new_chord._over = None
+        new_chord._root = self._notes[ord]
+        new_chord._notes = self._notes[ord:] + self._notes[:ord]
+        # make all notes after 1st above it by add Int.Oct
+        for i in range(1, len(new_chord._notes)):
+            if new_chord._notes[i] < new_chord._root:
+                new_chord._notes[i] += Int.Oct
+        return new_chord
 
     def Notes(self) -> list[Note]:
         return [n for n in self._notes]
@@ -284,10 +304,13 @@ class Chord:
 
     @staticmethod
     def Get3rd(notes: list[Note]):
+        # 考虑高八度
         for n in notes:
-            if n in notes[0] + [Int.Min3, Int.Maj3]:
-                return n
-        # 找不到三度音，寻找挂留音
+            if n in notes[0] + [Int.Min3, Int.Min10]:
+                return notes[0] + Int.Min3
+            if n in notes[0] + [Int.Maj3, Int.Maj10]:
+                return notes[0] + Int.Maj3
+        # 找不到三度音，寻找挂留音(不考虑高八度)
         for n in notes:
             if n - notes[0] in [Int.Maj2, Int.Per4]:
                 return n

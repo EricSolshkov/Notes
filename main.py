@@ -8,46 +8,29 @@ def Temp251To(c1: Chord):
     n2 = n5 + Int.Per5
     c2 = Chord(n2, 'm')
     c5 = Chord(n5, "7")
-    return [c2, c5]
+    return [c2, c5, c1]
 
-SetGlobalSignal("#")
+
+SetGlobalSignal("b")
 
 progression = [
-    Chord("Cmaj9"),
-    Chord("Bm7"),
-    Chord("E7b9"),
-    Chord("Am9"),
-    Chord("Gm9"),
-    Chord("C9"),
-    Chord("C7b9"),
-    Chord("Fmaj9"),
-    Chord("D9"),
-    Chord("G9"),
-    Chord("Cmaj9"),
-    Chord("bAmaj7"),
-    Chord("Fm7/G"),
-    Chord("Cmaj9"),
-    Chord("Bm7"),
-    Chord("E7"),
-    Chord("Am9"),
-    Chord("Gm9"),
-    Chord("C9"),
-    Chord("C7b9"),
-    Chord("Fmaj9"),
-    Chord("Gm9"),
-    Chord("D9"),
-    Chord("G11"),
-    Chord("C6"),
-    Chord("Fdim7/C"),
-    Chord("Cmaj7"),
-
+    Chord("Dm7"),
+    Chord("Em"),
+    Chord("Fm"),
+    Chord("bB7"),
+    Chord("bEmaj7")
 ]
+
+progression = [
+    Chord("Am7"),
+    Chord("#Cmaj7"),
+    Chord("bAmaj7"),
+    Chord("#Fm7"),
+    Chord("E7"),
+    Chord("#Cmaj7"),
+]
+
+ToEb = Temp251To(Chord("bE"))
+
 for c in progression:
-    pass
-    #c.Debug()
-    #print(f"alias: {c.GetNames()[:3]}\n")
-
-print(Chord.Names([Note("F"), Note("C"), Note("F"), Note("A"), Note("C"), Note("E")]))
-
-
-
+    print([str(n) for n in c.Notes()])

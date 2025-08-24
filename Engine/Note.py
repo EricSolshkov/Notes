@@ -106,32 +106,50 @@ class Note:
         elif note is not None and isinstance(note, int):
             self.__note__ = note
         elif note is not None and isinstance(note, str):
-            map = {
-                "C": 24,
-                "D": 26,
-                "E": 28,
-                "F": 29,
-                "G": 31,
-                "A": 33,
-                "B": 35,
-            }
-            if note[0] not in ['b', '#']:
-                self.__note__ = map[note[0]]
-                if len(note) >= 2:
-                    self.__note__ += int(note[1:]) * 12
-            else:
-                self.__note__ = map[note[1]]
-                if len(note) >= 3:
-                    self.__note__ += int(note[2:]) * 12
-                if note[0] == 'b':
-                    self.__note__ -= 1
-                    self.__signal__ = 'b'
-                else:
-                    self.__note__ += 1
-                    self.__signal__ = '#'
+            # input can be like "C" "C4" "C#" "#C" "bC" "Cb" "Cb4"
+            # ie. # and b may not be at [0] and octave may miss.
+            # extract text and number, then fill correct info to __note__ and __signal__
+            # if no octave specified, default is 4.
+            # octave is not a variable, it is used to multiply 12 and add to the note
+            # __note__ = 0 - .... from C0 to ....
 
+            # find # and b or skip and remove it.
+            modify = 0
+            if '#' in note:
+                self.__signal__ = '#'
+                note = note.replace('#', '')
+                modify = 1
+            elif 'b' in note:
+                self.__signal__ = 'b'
+                note = note.replace('b', '')
+                modify = -1
+
+            # find note name and remove it.
+            note_name = note.strip().upper()
+            if note_name.startswith('C'):
+                self.__note__ = 0 + modify
+            elif note_name.startswith('D'):
+                self.__note__ = 2 + modify
+            elif note_name.startswith('E'):
+                self.__note__ = 4 + modify
+            elif note_name.startswith('F'):
+                self.__note__ = 5 + modify
+            elif note_name.startswith('G'):
+                self.__note__ = 7 + modify
+            elif note_name.startswith('A'):
+                self.__note__ = 9 + modify
+            elif note_name.startswith('B'):
+                self.__note__ = 11 + modify
+            else:
+                raise ValueError(f"Invalid note name: {note}")
+            # find octave number and multiply 12 to the note.
+            if len(note) > 1 and note[1:].isdigit():
+                octave = int(note[1:])
+                self.__note__ += octave * 12
+            else:
+                self.__note__ += 4 * 12
         else:
-            self.__note__ = 24
+            self.__note__ = 48
 
         if __global_signal__ is not None:
             self.__signal__ = __global_signal__
@@ -183,17 +201,23 @@ class Note:
             return NotImplemented
 
     def __str__(self):
-        names1 = [
-            'C', '#C', 'D', '#D',
-            'E', 'F', '#F', 'G',
-            '#G', 'A', '#A', 'B'
-        ]
-        names2 = [
-            'C', 'bD', 'D', 'bE',
-            'E', 'F', 'bG', 'G',
-            'bA', 'A', 'bB', 'B'
-        ]
-        return (names1 if self.__signal__ == '#' else names2)[self.__note__ % 12]
+        """
+        Convert the note to a string representation.
+        __note__ -> % 12 to get name, / 12 to get octave
+        __signal__ -> if note is not in CDEFGAB, use __signal__ specified signal to mark.
+        """
+        if self.__signal__ == '#':
+            note_names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+        elif self.__signal__ == 'b':
+            note_names = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+        else:
+            raise ValueError("Invalid signal, must be '#' or 'b'")
+
+        octave = self.__note__ // 12
+        note_index = self.__note__ % 12
+        note_name = note_names[note_index]
+
+        return f"{note_name}{octave}"
 
     def __eq__(self, other):
         if other is None:
