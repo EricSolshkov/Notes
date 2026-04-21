@@ -385,6 +385,11 @@ class Chord:
 
     @staticmethod
     def Name(notes: list[Note]):
+        """
+        Analyze a list of notes, return the most possible chord name.
+        :param notes:
+        :return:
+        """
         _root = notes[0]
         structureNotes, other = Chord.Structure(notes)
         structureItvs = [i - _root for i in structureNotes.values()]
@@ -650,8 +655,13 @@ class Chord:
 
     @staticmethod
     def Standardize(notes: list[Note]):
+        """
+        将音列规范化到两个八度内，即，若低八度不低于低音，且不在原始音列中，则改变为低八度。
+        :param notes:
+        :return:
+        """
         notes = Chord.Reoctvate(notes)
-        # 将音列规范化到两个八度内，即，若低八度不低于低音，且不在原始音列中，则改变为低八度。
+
         for i, n in enumerate(notes):
             if i != 0:
                 while notes[i] - notes[0] > Int.DuoOct and notes[i] - Int.Oct not in notes:

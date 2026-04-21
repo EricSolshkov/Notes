@@ -32,5 +32,5 @@ progression = [
 
 ToEb = Temp251To(Chord("bE"))
 
-for c in progression:
-    print([str(n) for n in c.Notes()])
+print(Chord("F/G").Notes())
+print(Chord("F/G").GetNames())

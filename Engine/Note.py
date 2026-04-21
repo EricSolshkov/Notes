@@ -217,6 +217,25 @@ class Note:
         note_index = self.__note__ % 12
         note_name = note_names[note_index]
 
+        return f"{note_name}"
+
+    def __repr__(self):
+        """
+                Convert the note to a string representation.
+                __note__ -> % 12 to get name, / 12 to get octave
+                __signal__ -> if note is not in CDEFGAB, use __signal__ specified signal to mark.
+                """
+        if self.__signal__ == '#':
+            note_names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+        elif self.__signal__ == 'b':
+            note_names = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+        else:
+            raise ValueError("Invalid signal, must be '#' or 'b'")
+
+        octave = self.__note__ // 12
+        note_index = self.__note__ % 12
+        note_name = note_names[note_index]
+
         return f"{note_name}{octave}"
 
     def __eq__(self, other):
