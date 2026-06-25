@@ -4,6 +4,83 @@
 
 ---
 
+## E0 — 等价语义规范化（跨层前置决策）
+
+**问题**：代码中 `==`、`in`、`% 12`、`% 24` 等判等手段散落各处，语义未被显式区分，引入 spelling 后将进一步复杂化，必须在 P0 统一锁定。
+
+### 现状混乱来源
+
+| 语义 | 当前实现 | 问题 |
+|------|---------|------|
+| 绝对音高相等 | `Note.__eq__` 比较 `__note__` | 正确 |
+| 等音相等（音名无关）| 同上 | 等音没有区分，直接相等（引入 spelling 后将产生分歧）|
+| 音程严格相等 | `Interval.__eq__` 比较 `.value` | `Aug4 == Dim5` 当前为 True，**错误** |
+| 音程模12相等 | 隐式散落的 `% 12` | 无统一入口 |
+
+### Note 三个等价层级
+
+```python
+# 层级 1: __eq__ — 绝对音高相等（保持现状）
+Note("C4") == Note("C4")    # True
+Note("C#4") == Note("Db4") # True  ← 等音仍然相等
+Note("C4") == Note("C5")   # False
+
+# 层级 2: .pitch_class_eq() — 模12，不考虑八度
+Note("C4").pitch_class_eq(Note("C5"))   # True
+Note("C#4").pitch_class_eq(Note("Db5")) # True
+
+# 层级 3: .spelling_eq() — 严格相等，pitch + spelling 均同
+Note("C#4").spelling_eq(Note("Db4"))    # False ← 用于调性分析
+Note("C#4").spelling_eq(Note("C#4"))    # True
+```
+
+**`__eq__` 保持音高相等而非 spelling 相等的理由**：大量 `n in chord.Notes()`、`n not in composites` 等成员检查均依赖音高相等语义。若改为 spelling 严格相等，`Db` 和 `C#` 在同一和弦中会被视为两个不同的音，破坏所有和弦运算。
+
+### Interval 三个等价层级
+
+```python
+# 层级 1: __eq__ — 身份相等（F2 改类常量后）
+Aug4 == Aug4   # True  (same object)
+Aug4 == Dim5   # False ← 解决核心问题
+
+# 层级 2: .enharmonic_eq() — 半音数相等
+Aug4.enharmonic_eq(Dim5)   # True  (both = 6)
+Maj9.enharmonic_eq(Maj2)   # False (14 != 2)
+
+# 层级 3: .simple_eq() — 模12，复合音程折叠
+Maj9.simple_eq(Maj2)    # True  (14 % 12 == 2 % 12)
+Per11.simple_eq(Per4)   # True
+Aug4.simple_eq(Dim5)    # True
+```
+
+### `in` 运算符约定
+
+**所有 `in` 成员检查必须明确使用哪个层级，不允许隐式依赖 `__eq__`。**
+
+`Chord.Structure()` 中大量的 `in` 检查目前是半音数语义（判断某个音程是否是某类音），应改为 `.enharmonic_eq()` 显式调用。
+
+### mod-24 上界的最终决策
+
+**保留 mod-24 上界，但仅限于 `Chord.Standardize()` 的 Note 规范化步骤，不在 Interval 比较中使用。**
+
+原因：`Standardize()` 负责将输入音列折叠到 2 个八度内，这是合理的预处理；折叠后计算得到的 0–24 数值范围与 `_type` 字典的 `Int.Maj9=14` 等常量匹配时使用 `.enharmonic_eq()` 即可；未来需要分析开放声部（open voicing）时只需调整 `Standardize()`，不影响 Interval 比较语义。
+
+### 各场景使用的层级汇总
+
+| 使用场景 | 层级 | 理由 |
+|---------|------|------|
+| 和弦包含检查（`note in chord.Notes()`）| `Note.__eq__` | 等音算同一个音 |
+| 调性内音级归属（`note in scale`）| `Note.spelling_eq()` | F调的Gb ≠ F# |
+| 音程类型判断（`Structure()` 中）| `Interval.enharmonic_eq()` | 判断"是否是小三度"，不区分Aug2/Min3 |
+| 音程身份区分（命名时 Aug4 vs Dim5）| `Interval.__eq__` | 解决方向不同 |
+| 和弦命名查表（`_type` 字典匹配）| `Interval.enharmonic_eq()` | 和弦类型不区分等音 |
+| Scale 音级规范化 | `pitch_class_eq()` + `spelling_eq()` | 先找对音，再确认音名 |
+| Interval 复合/单纯等价（延伸音分析）| `Interval.simple_eq()` | Maj9 和 Maj2 是同一 tension |
+
+**引入节点**：P0，所有其他 P0 项的前置
+
+---
+
 ## 层面一：乐理功能性缺失
 
 ### F1 — Note 音名语义重设计（等音异名）
@@ -293,10 +370,11 @@ F2 改为类常量后，运算结果通过 `_registry` 查找，`% 24` 问题自
 
 ```
 P0（模型根基，同批重构）
+├── [前置] E0  等价语义规范化（Note三层/Interval三层/in约定/mod-24边界）
 ├── E1  消除 __global_signal__
 ├── F1  Note 双轨制（_pitch + _spelling）
 ├── F2  Interval 放弃 Enum 改类常量
-└── E6  统一音程模运算
+└── E6  统一音程模运算（mod-24 上界仅限 Standardize()）
 
 P1（结构重组 + 核心补完）
 ├── E2  Chord.py 拆分为 6 模块

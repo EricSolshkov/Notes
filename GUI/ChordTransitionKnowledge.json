@@ -1,0 +1,265 @@
+{
+  "ChordTransitionKnowledge": [
+    {
+      "Name": "属七解决",
+      "Description": "属七和弦解决至上方纯五度的大七和弦（V₇ → I）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "7",
+      "TargetInterval": -7,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "属七解决至大六",
+      "Description": "属七和弦解决至上方纯五度的大六和弦（V₇ → I⁶）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "7",
+      "TargetInterval": -7,
+      "TargetType": "6"
+    },
+    {
+      "Name": "半减七至属七",
+      "Description": "半减七和弦向上纯四度解决至属七和弦（ø⁷ → V₇）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "m7b5",
+      "TargetInterval": 5,
+      "TargetType": "7"
+    },
+    {
+      "Name": "二五进行",
+      "Description": "小七和弦作为ii级向上纯四度进行到属七（ii₇ → V₇）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "m7",
+      "TargetInterval": 5,
+      "TargetType": "7"
+    },
+    {
+      "Name": "大七五度圈",
+      "Description": "大七和弦沿五度圈方向（上行纯四度）进行。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": 5,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "小七五度圈",
+      "Description": "小七和弦沿五度圈方向（上行纯四度）进行。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "m7",
+      "TargetInterval": 5,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "属七五度圈",
+      "Description": "属七和弦沿五度圈方向（上行纯四度）进行。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "7",
+      "TargetInterval": 5,
+      "TargetType": "7"
+    },
+    {
+      "Name": "关系大调至小调",
+      "Description": "大七和弦连接至其关系小调（上行大六度/下行小三度）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": 9,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "关系小调至大调",
+      "Description": "小七和弦连接至其关系大调（上行小三度/下行大六度）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "m7",
+      "TargetInterval": 3,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "大七上行中音",
+      "Description": "大七和弦上行大三度进行到上方中音和弦。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": 4,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "大七下行中音",
+      "Description": "大七和弦下行小三度进行到下方中音和弦。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": -3,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "大七上行变化中音",
+      "Description": "大七和弦上行大三度进行到上方变化中音和弦（同类型）。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": 4,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "大七下行变化中音",
+      "Description": "大七和弦下行大三度进行到下方变化中音和弦（同类型）。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": -4,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "主和弦返回属七",
+      "Description": "主大七和弦可返回其上方纯五度的属七和弦（I → V₇）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "maj7",
+      "TargetInterval": 7,
+      "TargetType": "7"
+    },
+    {
+      "Name": "三全音替代",
+      "Description": "属七和弦可替换为距其三全音的另一属七和弦（♭Ⅱ₇ 替代 V₇）。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "7",
+      "TargetInterval": 6,
+      "TargetType": "7"
+    },
+    {
+      "Name": "三全音替代解决",
+      "Description": "三全音替代属七下行小二度解决至主大七和弦（♭Ⅱ₇ → I）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "7",
+      "TargetInterval": 1,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "变格进行",
+      "Description": "大七和弦通过变格终止进行（IV → I，下行纯四度）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": -5,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "下属至属七",
+      "Description": "下属大七和弦上行大二度进行到属七和弦（IV → V₇）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "maj7",
+      "TargetInterval": 2,
+      "TargetType": "7"
+    },
+    {
+      "Name": "小七变格进行",
+      "Description": "小七和弦通过变格终止进行（iv → i，下行纯四度）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "m7",
+      "TargetInterval": -5,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "副属七解决至大调",
+      "Description": "属七和弦作为副属七，解决至上方纯五度的大七和弦。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "7",
+      "TargetInterval": -7,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "副属七解决至小调",
+      "Description": "属七和弦作为副属七，解决至上方纯五度的小七和弦。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "7",
+      "TargetInterval": -7,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "阻碍终止",
+      "Description": "属七和弦阻碍终止，上行大二度解决至关系小七和弦（V₇ → vi₇）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "7",
+      "TargetInterval": 2,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "小调二五进行",
+      "Description": "小调半减七作为ii级向上纯四度进行到属七（iiø⁷ → V₇）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "m7b5",
+      "TargetInterval": 5,
+      "TargetType": "7"
+    },
+    {
+      "Name": "小调属主解决",
+      "Description": "小调属七和弦解决至上方纯五度的主小七和弦（V₇ → i₇）。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 0,
+      "Match": "7",
+      "TargetInterval": -7,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "大七共同音连接",
+      "Description": "大七和弦通过共同音进行（上行大三度，保持共同音）。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": 4,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "小七共同音连接",
+      "Description": "小七和弦通过共同音进行（上行小三度，保持共同音）。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "m7",
+      "TargetInterval": 3,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "大七平行移位",
+      "Description": "大七和弦平行移动大二度（保持和弦类型不变）。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "maj7",
+      "TargetInterval": 2,
+      "TargetType": "maj7"
+    },
+    {
+      "Name": "小七平行移位",
+      "Description": "小七和弦平行移动大二度（保持和弦类型不变）。",
+      "FunctionalWeight": 0,
+      "ColoristicWeight": 1,
+      "Match": "m7",
+      "TargetInterval": 2,
+      "TargetType": "m7"
+    },
+    {
+      "Name": "属七连锁",
+      "Description": "属七和弦沿五度圈方向（上行纯四度）形成连锁进行。",
+      "FunctionalWeight": 1,
+      "ColoristicWeight": 1,
+      "Match": "7",
+      "TargetInterval": 5,
+      "TargetType": "7"
+    }
+  ]
+}

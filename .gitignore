@@ -1,10 +1,49 @@
+# === Python ===
 __pycache__/
-.idea/
-Configs/
+*.py[cod]
+*.pyd
+*.so
+*.egg
+*.egg-info/
+*.spec
+*.manifest
+
+# === Virtual Environment ===
+.venv/
 venv/
+env/
+.env/
+
+# === Build & Distribution ===
 build/
 dist/
+*.whl
+*.tar.gz
 
-*.pyc
-*.pyd
-*.spec
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# === OS ===
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# === Project Configs (local only) ===
+Configs/
+
+# === Jupyter ===
+.ipynb_checkpoints/
+
+# === Coverage ===
+htmlcov/
+.coverage
+.pytest_cache/
+
+# === AI Analysis & Generated Docs (local only) ===
+DESIGN_ANALYSIS.md
+*_ANALYSIS.md
+*.analysis.md
